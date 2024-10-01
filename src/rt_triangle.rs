@@ -1,5 +1,6 @@
 //! Triangle types optimized for ray intersection performance.
 
+use std::ops::BitAnd;
 use bytemuck::{Pod, Zeroable};
 use glam::*;
 
@@ -254,20 +255,8 @@ impl RtTriangle {
         let abs_den = den.abs();
 
         fn signmsk(x: f32) -> f32 {
-            #[cfg(target_arch = "x86")]
-            use std::arch::x86::*;
-            #[cfg(target_arch = "x86_64")]
-            use std::arch::x86_64::*;
-            unsafe {
-                let mask = _mm_set1_ps(-0.0);
-                let x_vec = _mm_set_ss(x);
-                let sign_bit = _mm_and_ps(x_vec, mask);
-                _mm_cvtss_f32(sign_bit)
-                //_mm_cvtss_f32(_mm_and_ps(
-                //    _mm_set_ss(x),
-                //    _mm_castsi128_ps(_mm_set1_epi32(-2147483648i32)),
-                //))
-            }
+            let mask = 2147483648u32;
+            f32::from_bits(mask.bitand(x.to_bits()))
         }
 
         let sgn_den = signmsk(den).to_bits();

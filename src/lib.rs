@@ -1,3 +1,4 @@
+#![feature(portable_simd)]
 //! # BVH Construction and Traversal Library
 //!
 //! - [PLOC](https://meistdan.github.io/publications/ploc/paper.pdf) BVH2 builder with [Parallel Reinsertion](https://meistdan.github.io/publications/prbvh/paper.pdf) and spatial pre-splits.
